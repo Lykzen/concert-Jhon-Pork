@@ -113,6 +113,203 @@
             text-decoration: none
         }
 
+        /* Bouton animé avec fleurs */
+        .btn {
+            height: 4em;
+            width: 12em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 0px solid black;
+            cursor: pointer;
+        }
+
+        .wrapper {
+            height: 2em;
+            width: 8em;
+            position: relative;
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .text {
+            font-size: 17px;
+            z-index: 1;
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.7);
+            transition: all 0.5s ease;
+        }
+
+        .flower {
+            display: grid;
+            grid-template-columns: 1em 1em;
+            position: absolute;
+            transition: grid-template-columns 0.8s ease;
+        }
+
+        .flower1 {
+            top: -12px;
+            left: -13px;
+            transform: rotate(5deg);
+        }
+
+        .flower2 {
+            bottom: -5px;
+            left: 8px;
+            transform: rotate(35deg);
+        }
+
+        .flower3 {
+            bottom: -15px;
+            transform: rotate(0deg);
+        }
+
+        .flower4 {
+            top: -14px;
+            transform: rotate(15deg);
+        }
+
+        .flower5 {
+            right: 11px;
+            top: -3px;
+            transform: rotate(25deg);
+        }
+
+        .flower6 {
+            right: -15px;
+            bottom: -15px;
+            transform: rotate(30deg);
+        }
+
+        .petal {
+            height: 1em;
+            width: 1em;
+            border-radius: 40% 70% / 7% 90%;
+            background: linear-gradient(#07a6d7, #93e0ee);
+            border: 0.5px solid #96d1ec;
+            z-index: 0;
+            transition: width 0.8s ease, height 0.8s ease;
+        }
+
+        .two {
+            transform: rotate(90deg);
+        }
+
+        .three {
+            transform: rotate(270deg);
+        }
+
+        .four {
+            transform: rotate(180deg);
+        }
+
+        .btn:hover .petal {
+            background: linear-gradient(#0761d7, #93bdee);
+            border: 0.5px solid #96b4ec;
+        }
+
+        .btn:hover .flower {
+            grid-template-columns: 1.5em 1.5em;
+        }
+
+        .btn:hover .flower .petal {
+            width: 1.5em;
+            height: 1.5em;
+        }
+
+        .btn:hover .text {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn:hover div.flower1 {
+            animation: 15s linear 0s normal none infinite running flower1;
+        }
+
+        @keyframes flower1 {
+            0% {
+                transform: rotate(5deg);
+            }
+
+            100% {
+                transform: rotate(365deg);
+            }
+        }
+
+        .btn:hover div.flower2 {
+            animation: 13s linear 1s normal none infinite running flower2;
+        }
+
+        @keyframes flower2 {
+            0% {
+                transform: rotate(35deg);
+            }
+
+            100% {
+                transform: rotate(-325deg);
+            }
+        }
+
+        .btn:hover div.flower3 {
+            animation: 16s linear 1s normal none infinite running flower3;
+        }
+
+        @keyframes flower3 {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn:hover div.flower4 {
+            animation: 17s linear 1s normal none infinite running flower4;
+        }
+
+        @keyframes flower4 {
+            0% {
+                transform: rotate(15deg);
+            }
+
+            100% {
+                transform: rotate(375deg);
+            }
+        }
+
+        .btn:hover div.flower5 {
+            animation: 20s linear 1s normal none infinite running flower5;
+        }
+
+        @keyframes flower5 {
+            0% {
+                transform: rotate(25deg);
+            }
+
+            100% {
+                transform: rotate(-335deg);
+            }
+        }
+
+        .btn:hover div.flower6 {
+            animation: 15s linear 1s normal none infinite running flower6;
+        }
+
+        @keyframes flower6 {
+            0% {
+                transform: rotate(30deg);
+            }
+
+            100% {
+                transform: rotate(390deg);
+            }
+        }
+
         .menu-toggle {
             display: none;
             background: none;
@@ -430,28 +627,415 @@
             width: 100%;
             max-width: var(--max-width);
             margin: 0 auto;
-            padding: 1.5rem;
+            padding: 2.5rem;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 2rem;
             align-items: center;
-            border-radius: var(--radius);
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(6px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: var(--shadow);
+            border-radius: 20px;
+            background: linear-gradient(145deg, rgba(7, 16, 24, 0.95), rgba(20, 30, 45, 0.95));
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 255, 213, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 255, 213, 0.1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .audio-card audio {
+        .audio-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
-            height: 42px;
-            border-radius: 12px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 213, 0.1), transparent);
+            animation: shimmer 3s infinite;
         }
 
-        .audio-card p {
-            margin: 0;
-            font-size: 0.9rem;
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        .vinyl-player {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            width: 100%;
+            max-width: 700px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .vinyl-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            flex-shrink: 0;
+        }
+
+        .vinyl-disc {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #2a2a2a 0%, #0a0a0a 40%, #1a1a1a 60%, #000 100%);
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .vinyl-disc::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .vinyl-disc::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #000;
+        }
+
+        .vinyl-grooves {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        .vinyl-groove {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .vinyl-disc.spinning {
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .vinyl-disc:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 50px rgba(0, 255, 213, 0.3);
+        }
+
+        .vinyl-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(0, 255, 213, 0.3), rgba(124, 60, 255, 0.3));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
             text-align: center;
+            padding: 0.5rem;
+            z-index: 2;
+        }
+
+        .vinyl-reflection {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 40%;
+            height: 40%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .tonearm {
+            position: absolute;
+            top: 10px;
+            right: -40px;
+            width: 120px;
+            height: 8px;
+            background: linear-gradient(90deg, #666, #999, #666);
+            border-radius: 4px;
+            transform-origin: right center;
+            transform: rotate(-30deg);
+            transition: transform 0.5s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .tonearm::before {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 15px;
+            height: 15px;
+            background: #444;
+            border-radius: 50%;
+        }
+
+        .tonearm::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid #888;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
+
+        .tonearm.playing {
+            transform: rotate(0deg);
+        }
+
+        .player-controls {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .track-info {
+            text-align: left;
+        }
+
+        .track-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0 0 0.5rem 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .track-artist {
+            font-size: 1rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .control-buttons {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 255, 213, 0.3);
+            color: var(--accent);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(0, 255, 213, 0.1);
+            border-color: var(--accent);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 255, 213, 0.3);
+        }
+
+        .control-btn.play-pause {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            border: none;
+            color: #041014;
+            font-size: 2rem;
+            box-shadow: 0 0 30px rgba(0, 255, 213, 0.5);
+        }
+
+        .control-btn.play-pause:hover {
+            box-shadow: 0 0 40px rgba(0, 255, 213, 0.8);
+        }
+
+        .control-btn.loop {
+            position: relative;
+        }
+
+        .control-btn.loop.active {
+            background: rgba(0, 255, 213, 0.2);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .control-btn.loop.active::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .progress-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            border-radius: 10px;
+            position: relative;
+            transition: width 0.1s linear;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .eq-visualizer {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 4px;
+            height: 60px;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .eq-visualizer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 213, 0.1), transparent);
+            animation: scanline 2s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        .eq-bar {
+            width: 6px;
+            min-height: 5px;
+            background: linear-gradient(180deg, var(--accent), var(--accent-2));
+            border-radius: 3px;
+            transition: height 0.1s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 213, 0.5);
+            position: relative;
+        }
+
+        .eq-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        @media (max-width: 768px) {
+            .vinyl-player {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .track-info {
+                text-align: center;
+            }
+
+            .control-buttons {
+                justify-content: center;
+            }
+
+            .vinyl-container {
+                width: 150px;
+                height: 150px;
+            }
+
+            .vinyl-disc {
+                width: 150px;
+                height: 150px;
+            }
         }
     </style>
 </head>
@@ -470,7 +1054,47 @@
                 <a href="#program">Programme</a>
                 <a href="#info">Infos pratiques</a>
                 <a href="#faq">FAQ</a>
-                <a href="#buy" class="cta" id="buy-btn">Acheter un billet</a>
+                <button class="btn" id="buy-btn">
+                    <div class="wrapper">
+                        <p class="text">Acheter</p>
+                        <div class="flower flower1">
+                            <div class="petal one"></div>
+                            <div class="petal two"></div>
+                            <div class="petal three"></div>
+                            <div class="petal four"></div>
+                        </div>
+                        <div class="flower flower2">
+                            <div class="petal one"></div>
+                            <div class="petal two"></div>
+                            <div class="petal three"></div>
+                            <div class="petal four"></div>
+                        </div>
+                        <div class="flower flower3">
+                            <div class="petal one"></div>
+                            <div class="petal two"></div>
+                            <div class="petal three"></div>
+                            <div class="petal four"></div>
+                        </div>
+                        <div class="flower flower4">
+                            <div class="petal one"></div>
+                            <div class="petal two"></div>
+                            <div class="petal three"></div>
+                            <div class="petal four"></div>
+                        </div>
+                        <div class="flower flower5">
+                            <div class="petal one"></div>
+                            <div class="petal two"></div>
+                            <div class="petal three"></div>
+                            <div class="petal four"></div>
+                        </div>
+                        <div class="flower flower6">
+                            <div class="petal one"></div>
+                            <div class="petal two"></div>
+                            <div class="petal three"></div>
+                            <div class="petal four"></div>
+                        </div>
+                    </div>
+                </button>
             </nav>
 
             <button class="menu-toggle" id="menuToggle">☰ Menu</button>
@@ -482,7 +1106,47 @@
             <a href="#info">Infos pratiques</a>
             <a href="#faq">FAQ</a>
             <a href="#audio-preview">Écouter un extrait</a>
-            <a href="#buy" class="cta" id="buy-btn-mobile">Acheter un billet</a>
+            <button class="btn" id="buy-btn-mobile" style="margin: 0.5rem 0;">
+                <div class="wrapper">
+                    <p class="text">Acheter</p>
+                    <div class="flower flower1">
+                        <div class="petal one"></div>
+                        <div class="petal two"></div>
+                        <div class="petal three"></div>
+                        <div class="petal four"></div>
+                    </div>
+                    <div class="flower flower2">
+                        <div class="petal one"></div>
+                        <div class="petal two"></div>
+                        <div class="petal three"></div>
+                        <div class="petal four"></div>
+                    </div>
+                    <div class="flower flower3">
+                        <div class="petal one"></div>
+                        <div class="petal two"></div>
+                        <div class="petal three"></div>
+                        <div class="petal four"></div>
+                    </div>
+                    <div class="flower flower4">
+                        <div class="petal one"></div>
+                        <div class="petal two"></div>
+                        <div class="petal three"></div>
+                        <div class="petal four"></div>
+                    </div>
+                    <div class="flower flower5">
+                        <div class="petal one"></div>
+                        <div class="petal two"></div>
+                        <div class="petal three"></div>
+                        <div class="petal four"></div>
+                    </div>
+                    <div class="flower flower6">
+                        <div class="petal one"></div>
+                        <div class="petal two"></div>
+                        <div class="petal three"></div>
+                        <div class="petal four"></div>
+                    </div>
+                </div>
+            </button>
         </div>
     </header>
 
@@ -519,7 +1183,47 @@
                 <h1 class="title">Concert Jhon Pork — PSYCHIK</h1>
                 <div class="meta">Dimanche 27 juillet 2026 — Stade de Vacqueyras — Ouverture des portes 18:00</div>
                 <div class="hero-actions">
-                    <a class="cta" href="#buy" id="heroBuy">Acheter un billet</a>
+                    <button class="btn" id="heroBuy">
+                        <div class="wrapper">
+                            <p class="text">Acheter</p>
+                            <div class="flower flower1">
+                                <div class="petal one"></div>
+                                <div class="petal two"></div>
+                                <div class="petal three"></div>
+                                <div class="petal four"></div>
+                            </div>
+                            <div class="flower flower2">
+                                <div class="petal one"></div>
+                                <div class="petal two"></div>
+                                <div class="petal three"></div>
+                                <div class="petal four"></div>
+                            </div>
+                            <div class="flower flower3">
+                                <div class="petal one"></div>
+                                <div class="petal two"></div>
+                                <div class="petal three"></div>
+                                <div class="petal four"></div>
+                            </div>
+                            <div class="flower flower4">
+                                <div class="petal one"></div>
+                                <div class="petal two"></div>
+                                <div class="petal three"></div>
+                                <div class="petal four"></div>
+                            </div>
+                            <div class="flower flower5">
+                                <div class="petal one"></div>
+                                <div class="petal two"></div>
+                                <div class="petal three"></div>
+                                <div class="petal four"></div>
+                            </div>
+                            <div class="flower flower6">
+                                <div class="petal one"></div>
+                                <div class="petal two"></div>
+                                <div class="petal three"></div>
+                                <div class="petal four"></div>
+                            </div>
+                        </div>
+                    </button>
                     <a class="small" href="#lineup">Voir le lineup</a>
                 </div>
             </div>
@@ -577,11 +1281,75 @@
         <section id="audio-preview" class="container" style="margin-top:2rem">
             <h2 class="section-title">Écouter un extrait</h2>
             <div class="card audio-card">
-                <audio controls preload="none">
-                    <source src="image/Nouveau_projet.wav" type="audio/mpeg">
+                <div class="vinyl-player">
+                    <div class="vinyl-container">
+                        <div class="vinyl-disc" id="vinylDisc">
+                            <div class="vinyl-reflection"></div>
+                            <div class="vinyl-grooves">
+                                <div class="vinyl-groove" style="width: 85%; height: 85%; top: 7.5%; left: 7.5%;"></div>
+                                <div class="vinyl-groove" style="width: 70%; height: 70%; top: 15%; left: 15%;"></div>
+                                <div class="vinyl-groove" style="width: 55%; height: 55%; top: 22.5%; left: 22.5%;">
+                                </div>
+                            </div>
+                            <div class="vinyl-label">
+                                <span>JHON<br>PORK</span>
+                            </div>
+                        </div>
+                        <div class="tonearm" id="tonearm"></div>
+                    </div>
+
+                    <div class="player-controls">
+                        <div class="track-info">
+                            <h3 class="track-title">Ya Ya</h3>
+                            <p class="track-artist">Jhon Pork - Disque Diamant</p>
+                        </div>
+
+                        <div class="control-buttons">
+                            <button class="control-btn" id="prevBtn">⏮</button>
+                            <button class="control-btn play-pause" id="playPauseBtn">▶</button>
+                            <button class="control-btn" id="nextBtn">⏭</button>
+                            <button class="control-btn loop" id="loopBtn" title="Lecture en boucle">🔁</button>
+                        </div>
+
+                        <div class="progress-section">
+                            <div class="progress-bar-container" id="progressContainer">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <div class="time-info">
+                                <span id="currentTime">0:00</span>
+                                <span id="totalTime">0:00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="eq-visualizer" id="eqVisualizer">
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
+                </div>
+
+                <audio id="audioPlayer" preload="metadata">
+                    <source src="image/Nouveau_projet.wav" type="audio/wav">
                     Votre navigateur ne supporte pas la lecture audio.
                 </audio>
-                <p class="small">Voici le célèbre morceau de Jhon Pork intitulé "Ya Ya"</p>
             </div>
         </section>
 
@@ -690,8 +1458,49 @@
                 <div class="row"><strong>VIP :</strong> 65€</div>
             </div>
             <p class="small">Achetez via le lien officiel :</p>
-            <p><a class="cta" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=2s" target="_blank">Aller à la
-                    billetterie</a></p>
+            <p style="display: flex; justify-content: center;">
+                <a class="btn" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=2s" target="_blank">
+                    <div class="wrapper">
+                        <p class="text">Billetterie</p>
+                        <div class="flower flower1">
+                            <div class="petal one"></div>
+                            <div class="petal two"></div>
+                            <div class="petal three"></div>
+                            <div class="petal four"></div>
+                        </div>
+                        <div class="flower flower2">
+                            <div class="petal one"></div>
+                            <div class="petal two"></div>
+                            <div class="petal three"></div>
+                            <div class="petal four"></div>
+                        </div>
+                        <div class="flower flower3">
+                            <div class="petal one"></div>
+                            <div class="petal two"></div>
+                            <div class="petal three"></div>
+                            <div class="petal four"></div>
+                        </div>
+                        <div class="flower flower4">
+                            <div class="petal one"></div>
+                            <div class="petal two"></div>
+                            <div class="petal three"></div>
+                            <div class="petal four"></div>
+                        </div>
+                        <div class="flower flower5">
+                            <div class="petal one"></div>
+                            <div class="petal two"></div>
+                            <div class="petal three"></div>
+                            <div class="petal four"></div>
+                        </div>
+                        <div class="flower flower6">
+                            <div class="petal one"></div>
+                            <div class="petal two"></div>
+                            <div class="petal three"></div>
+                            <div class="petal four"></div>
+                        </div>
+                    </div>
+                </a>
+            </p>
             <div style="display:flex;gap:.6rem;justify-content:flex-end;margin-top:.6rem">
                 <button class="btn-close" id="modalClose">Fermer</button>
             </div>
@@ -894,6 +1703,144 @@
             // Initialiser le compte à rebours et le bouton retour en haut
             initCountdown();
             initBackToTop();
+        })();
+
+        // Lecteur vinyle personnalisé
+        (function initVinylPlayer() {
+            const audio = document.getElementById('audioPlayer');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const vinylDisc = document.getElementById('vinylDisc');
+            const tonearm = document.getElementById('tonearm');
+            const progressFill = document.getElementById('progressFill');
+            const progressContainer = document.getElementById('progressContainer');
+            const currentTimeEl = document.getElementById('currentTime');
+            const totalTimeEl = document.getElementById('totalTime');
+            const eqBars = document.querySelectorAll('.eq-bar');
+            const loopBtn = document.getElementById('loopBtn');
+
+            let isPlaying = false;
+            let isLooping = false;
+
+            // Format temps
+            function formatTime(seconds) {
+                if (isNaN(seconds)) return '0:00';
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            // Play/Pause
+            playPauseBtn.addEventListener('click', () => {
+                if (isPlaying) {
+                    audio.pause();
+                    playPauseBtn.textContent = '▶';
+                    vinylDisc.classList.remove('spinning');
+                    tonearm.classList.remove('playing');
+                    isPlaying = false;
+                } else {
+                    audio.play();
+                    playPauseBtn.textContent = '⏸';
+                    vinylDisc.classList.add('spinning');
+                    tonearm.classList.add('playing');
+                    isPlaying = true;
+                }
+            });
+
+            // Loop toggle
+            loopBtn.addEventListener('click', () => {
+                isLooping = !isLooping;
+                audio.loop = isLooping;
+                if (isLooping) {
+                    loopBtn.classList.add('active');
+                } else {
+                    loopBtn.classList.remove('active');
+                }
+            });
+
+            // Mise à jour de la progression
+            audio.addEventListener('timeupdate', () => {
+                if (audio.duration) {
+                    const percent = (audio.currentTime / audio.duration) * 100;
+                    progressFill.style.width = `${percent}%`;
+                    currentTimeEl.textContent = formatTime(audio.currentTime);
+                }
+            });
+
+            // Définir la durée totale
+            audio.addEventListener('loadedmetadata', () => {
+                totalTimeEl.textContent = formatTime(audio.duration);
+            });
+
+            // Navigation dans la barre de progression
+            progressContainer.addEventListener('click', (e) => {
+                const rect = progressContainer.getBoundingClientRect();
+                const percent = (e.clientX - rect.left) / rect.width;
+                audio.currentTime = percent * audio.duration;
+            });
+
+            // Fin de lecture (si pas en boucle)
+            audio.addEventListener('ended', () => {
+                if (!isLooping) {
+                    isPlaying = false;
+                    playPauseBtn.textContent = '▶';
+                    vinylDisc.classList.remove('spinning');
+                    tonearm.classList.remove('playing');
+                    progressFill.style.width = '0%';
+                }
+            });
+
+            // Animation de l'égaliseur améliorée
+            let eqInterval;
+            function animateEqualizer() {
+                if (isPlaying) {
+                    eqBars.forEach((bar, index) => {
+                        // Créer un pattern d'onde plus réaliste
+                        const baseHeight = 10;
+                        const maxHeight = 45;
+                        const variation = Math.sin(Date.now() / 200 + index * 0.5) * 15;
+                        const random = Math.random() * 20;
+                        const height = baseHeight + variation + random;
+                        const clampedHeight = Math.min(Math.max(height, baseHeight), maxHeight);
+
+                        bar.style.height = `${clampedHeight}px`;
+                    });
+                } else {
+                    eqBars.forEach(bar => {
+                        bar.style.height = '5px';
+                    });
+                }
+            }
+
+            eqInterval = setInterval(animateEqualizer, 80);
+
+            // Boutons prev/next
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                audio.currentTime = 0;
+                if (!isPlaying) {
+                    audio.play();
+                    playPauseBtn.textContent = '⏸';
+                    vinylDisc.classList.add('spinning');
+                    tonearm.classList.add('playing');
+                    isPlaying = true;
+                }
+            });
+
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                if (isLooping) {
+                    audio.currentTime = 0;
+                } else {
+                    audio.currentTime = audio.duration || 0;
+                }
+            });
+
+            // Effet de scintillement sur le vinyle en lecture
+            setInterval(() => {
+                if (isPlaying) {
+                    vinylDisc.style.filter = `brightness(${1 + Math.random() * 0.1})`;
+                } else {
+                    vinylDisc.style.filter = 'brightness(1)';
+                }
+            }, 100);
         })();
     </script>
 
