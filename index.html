@@ -1,0 +1,853 @@
+<!doctype html>
+<!--
+  index.html - Site événementiel pour un concert (HTML5 + CSS + minimal JS)
+
+  REMARQUES (changer ici) :
+  - Titre de l'événement / date / lieu / horaires / artistes : modifiez les constantes en début de <body> (data-* attributes) ou directement le contenu HTML.
+  - Lien billetterie : remplacez "#buy" par votre URL réelle et dans le modal l'attribut href.
+  - Images : remplacées par des placeholders https://via.placeholder.com/ . Cherchez les <img src="https://via.placeholder.com/..."> et changez les URLs.
+  - JSON-LD : modifiez les champs name, startDate, endDate, location, image, url, description, performer dans le <script type="application/ld+json"> situé plus bas.
+  - Couleurs / typographie : changez les variables CSS dans :root (--bg, --accent, --text, --muted, --font-family).
+  - Pour ajouter/retirer des artistes, modifiez la section <section id="lineup"> (chaque .artist-card).
+  - Accessibilité : éléments ARIA et focus visibles inclus. Vérifiez toujours avec un lecteur d'écran et un outil de contraste.
+-->
+
+<html lang="fr">
+
+<head>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="image/artiste jhon pork.png">
+    <link rel="apple-touch-icon" href="image/artiste jhon pork.png">
+    <meta name="theme-color" content="#0f0"> <!-- couleur d'accent (modifiable) -->
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0b0f12" />
+    <title>Concert - Nom de l'Événement • Date • Lieu</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Google Font suggérée : Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Palette & typographie - personnalisez ici */
+            --bg: #071018;
+            --surface: #09121a;
+            --accent: #00ffd5;
+            --accent-2: #7c3cff;
+            --text: #e6f7f5;
+            --muted: #9fb6b1;
+            --danger: #ff6b6b;
+            --font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            --max-width: 1100px;
+            --radius: 12px;
+            --glass: rgba(255, 255, 255, 0.03);
+            --shadow: 0 6px 20px rgba(2, 6, 10, 0.6);
+            --transition: 200ms ease;
+            --break-sm: 720px;
+        }
+
+        /* Base */
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font-family);
+            background: linear-gradient(180deg, var(--bg), #020305);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.4;
+            font-size: 16px;
+        }
+
+        /* Container */
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* Header / nav sticky */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: linear-gradient(180deg, rgba(7, 16, 24, 0.8), rgba(7, 16, 24, 0.6));
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: .6rem 1rem;
+            gap: 1rem;
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: .6rem
+        }
+
+        .brand .logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 0.6px;
+            color: var(--accent);
+            text-decoration: none
+        }
+
+        .brand .tag {
+            font-size: .85rem;
+            color: var(--muted)
+        }
+
+        .nav {
+            display: flex;
+            gap: .8rem;
+            align-items: center
+        }
+
+        .nav a {
+            color: var(--text);
+            text-decoration: none;
+            padding: .5rem .6rem;
+            border-radius: 8px;
+            font-weight: 600
+        }
+
+        .nav a:hover,
+        .nav a:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.02)
+        }
+
+        .cta {
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            color: #041014;
+            padding: .55rem .75rem;
+            border-radius: 10px;
+            font-weight: 700;
+            text-decoration: none
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: .4rem;
+            border-radius: 8px;
+            color: var(--text)
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 60vh;
+            display: grid;
+            place-items: center;
+            padding: 3rem 1rem 4rem;
+            text-align: center;
+            position: relative;
+            background-image: linear-gradient(120deg, rgba(124, 60, 255, 0.12), rgba(0, 255, 213, 0.06)), url('image/fond case.webp');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-inner {
+            background: linear-gradient(180deg, rgba(2, 8, 12, 0.35), rgba(2, 8, 12, 0.6));
+            padding: 2rem;
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            max-width: 980px;
+            width: 100%;
+        }
+
+        .kicker {
+            display: inline-block;
+            padding: .25rem .6rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--muted);
+            font-weight: 600;
+            margin-bottom: 1rem
+        }
+
+        .title {
+            font-size: clamp(1.6rem, 4vw, 3rem);
+            margin: .2rem 0 0.4rem
+        }
+
+        .meta {
+            color: var(--muted);
+            font-weight: 600;
+            margin-bottom: 1rem
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: .8rem;
+            flex-wrap: wrap;
+            justify-content: center
+        }
+
+        /* Sections */
+        section {
+            padding: 2.2rem 1rem
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: .8rem;
+            color: var(--accent)
+        }
+
+        .card {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.02)
+        }
+
+        .grid {
+            display: grid;
+            gap: 1rem
+        }
+
+        .lineup-grid {
+            grid-template-columns: repeat(4, 1fr)
+        }
+
+        @media (max-width:900px) {
+            .lineup-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+        @media (max-width:480px) {
+            .lineup-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .artist-card {
+            display: flex;
+            flex-direction: column;
+            gap: .6rem;
+            align-items: flex-start
+        }
+
+        .artist-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 10px
+        }
+
+        .artist-name {
+            font-weight: 700
+        }
+
+        .artist-role {
+            color: var(--muted);
+            font-size: .95rem
+        }
+
+        .program-table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        .program-table th,
+        .program-table td {
+            padding: .6rem;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
+            text-align: left
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 1rem
+        }
+
+        @media (max-width:900px) {
+            .info-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        /* FAQ */
+        .faq-item {
+            margin-bottom: .6rem
+        }
+
+        .faq-question {
+            font-weight: 700;
+            cursor: pointer
+        }
+
+        .faq-answer {
+            color: var(--muted);
+            display: none;
+            margin-top: .4rem
+        }
+
+        /* Footer */
+        .footer {
+            padding: 1.4rem 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            color: var(--muted)
+        }
+
+        .socials a {
+            margin-right: .6rem;
+            text-decoration: none
+        }
+
+        /* Modal */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(2, 6, 10, 0.6);
+            z-index: 60
+        }
+
+        .modal {
+            max-width: 520px;
+            width: calc(100% - 2rem);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            padding: 1.2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.04)
+        }
+
+        .modal h3 {
+            margin: 0 0 .4rem
+        }
+
+        .modal .price-list {
+            display: flex;
+            flex-direction: column;
+            gap: .4rem;
+            margin: .6rem 0
+        }
+
+        .modal .btn-close {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: .45rem .6rem;
+            border-radius: 8px;
+            color: var(--text)
+        }
+
+        /* Accessibility / Focus */
+        :focus {
+            outline: none
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible {
+            outline: 3px solid rgba(0, 255, 213, 0.14);
+            box-shadow: 0 0 0 3px rgba(0, 255, 213, 0.06);
+            border-radius: 8px
+        }
+
+        [aria-hidden="true"] {
+            pointer-events: none
+        }
+
+        .hidden-visually {
+            position: absolute !important;
+            height: 1px;
+            width: 1px;
+            overflow: hidden;
+            clip: rect(1px, 1px, 1px, 1px);
+            white-space: nowrap
+        }
+
+        /* Slight minification: compact utility */
+        .row {
+            display: flex;
+            gap: 1rem;
+            align-items: center
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center
+        }
+
+        .small {
+            font-size: .9rem;
+            color: var(--muted)
+        }
+
+        /* Mobile nav */
+        .mobile-nav {
+            display: none
+        }
+
+        @media (max-width:720px) {
+            .nav {
+                display: none
+            }
+
+            .menu-toggle {
+                display: inline-flex
+            }
+
+            .mobile-nav {
+                display: flex;
+                flex-direction: column;
+                gap: .25rem;
+                padding: 0.6rem 1rem
+            }
+
+            .mobile-nav a {
+                padding: .7rem;
+                border-radius: 10px;
+                border: 1px solid rgba(255, 255, 255, 0.02)
+            }
+
+            .hero {
+                padding-top: 6rem
+            }
+        }
+
+        /* Lecteur audio intégré et plus large */
+        .audio-card {
+            width: 100%;
+            /* occupe toute la largeur de la section */
+            max-width: var(--max-width);
+            /* même largeur max que container */
+            margin: 0 auto;
+            /* centré */
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: var(--shadow);
+        }
+
+        /* Lecteur audio moderne */
+        .audio-card audio {
+            width: 100%;
+            height: 42px;
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(4px);
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Panneau Webkit */
+        .audio-card audio::-webkit-media-controls-panel {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            height: 42px;
+        }
+
+        .audio-card audio::-webkit-media-controls-play-button {
+            background-color: var(--accent);
+            border-radius: 50%;
+            transform: scale(0.85);
+        }
+
+        .audio-card audio::-webkit-media-controls-timeline {
+            background: rgba(255, 255, 255, 0.15);
+            height: 5px;
+            border-radius: 5px;
+        }
+
+        /* Texte descriptif */
+        .audio-card p {
+            margin: 0;
+            font-size: 0.9rem;
+            text-align: center;
+            color: var(--text);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Data & content à modifier rapidement : changez texte/date/lieu/artistes ci-dessous -->
+    <header class="header" role="banner">
+        <div class="header-inner" role="navigation" aria-label="Navigation principale">
+            <div class="brand" aria-hidden="false">
+                <a href="#" class="logo" id="site-title">Concert Jhon Pork</a>
+                <div class="tag small">Live • Date: <strong id="date-short">27 juillet 2026</strong></div>
+            </div>
+
+            <nav class="nav" aria-label="Menu principal">
+                <a href="#about">À propos</a>
+                <a href="#lineup">Lineup</a>
+                <a href="#program">Programme</a>
+                <a href="#info">Infos pratiques</a>
+                <a href="#faq">FAQ</a>
+                <a href="#buy" class="cta" id="buy-btn">Acheter un billet</a>
+            </nav>
+
+            <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileNav"
+                aria-label="Ouvrir le menu">
+                ☰ Menu
+            </button>
+        </div>
+        <!-- Mobile nav -->
+        <div id="mobileNav" class="mobile-nav" hidden aria-hidden="true">
+            <a href="#about">À propos</a>
+            <a href="#lineup">Lineup</a>
+            <a href="#program">Programme</a>
+            <a href="#info">Infos pratiques</a>
+            <a href="#faq">FAQ</a>
+            <a href="#buy" class="cta" id="buy-btn-mobile">Acheter un billet</a>
+        </div>
+    </header>
+
+    <main id="main" role="main">
+        <!-- HERO -->
+        <section class="hero" aria-labelledby="heroTitle">
+            <div class="hero-inner container card" role="region" aria-label="Introduction de l'événement">
+                <div class="kicker" id="kicker">FESTIVAL • CONCERT</div>
+                <h1 id="heroTitle" class="title">Concert Jhon Pork — PSYCHIK</h1>
+                <div class="meta" id="heroMeta">Dimanche 27 juillet 2026 — Stade de Vacqueyras — Ouverture des portes
+                    18:00</div>
+                <div class="hero-actions">
+                    <a class="cta" href="#buy" id="heroBuy">Acheter un billet</a>
+                    <a class="small" href="#lineup">Voir le lineup</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about" class="container" aria-labelledby="aboutTitle">
+            <h2 id="aboutTitle" class="section-title">À propos</h2>
+            <div class="card"
+                style="background:url('image/fond\ case\ 2.jpg') center/cover no-repeat; backdrop-filter:blur(3px);">
+                <p><strong> Le Concert Jhon Pork</strong> est une soirée/concert qui réunit des artistes locaux et
+                    internationaux pour une expérience musicale unique. Attendez-vous à des performances live, une scène
+                    principale, foodtrucks et zone détente.</p>
+                <p class="small">Durée estimée : 18:00 - 02:00. Préparez votre arrivée en avance, arrivez à cheval ou en
+                    fusée si possible.</p>
+            </div>
+        </section>
+
+        <!-- LINEUP -->
+        <section id="lineup" class="container" aria-labelledby="lineupTitle">
+            <h2 id="lineupTitle" class="section-title">Lineup / Artistes</h2>
+            <div class="grid lineup-grid" role="list" aria-label="Liste des artistes">
+                <article class="card artist-card" role="listitem">
+                    <img src="image/artiste jhon pork.png" alt="Photo de Jhon Pork">
+                    <div>
+                        <div class="artist-name">Jhon Pork</div>
+                        <div class="artist-role">Tête d'affiche • Toute la soirée</div>
+                        <p class="small">Jhon Pork a réeussi a ce hisse numero 1 mondial malgré ces début très
+                            mouvmentée, il a réussi a ce réinventer dans un nouveaux style.</p>
+                    </div>
+                </article>
+
+                <article class="card artist-card" role="listitem">
+                    <img src="image/artiste Marius.jpg" alt="Photo de Marius Decarre">
+                    <div>
+                        <div class="artist-name">Marius </div>
+                        <div class="artist-role">Artiste invité • 20:00</div>
+                        <p class="small">Cette personne très particuliers avec des talent de cuisinier inées est un
+                            artiste locale très peux réputes. Je deconseille.</p>
+                    </div>
+                </article>
+
+                <article class="card artist-card" role="listitem">
+                    <img src="image/artiste Kilian.jpg" alt="Photo de kilian">
+                    <div>
+                        <div class="artist-name">Kalimero</div>
+                        <div class="artist-role">DJ set • a partir de 20 heures (il n est pas ponctuelle)</div>
+                        <p class="small">Kalimero est attebdu dès 20 heures ,il est très ponctuelle donc il devrais être
+                            a l'heures (je ne suis pas de cette avis ...).</p>
+                    </div>
+                </article>
+        </section>
+
+        <!-- Audio – Extrait musical -->
+        <section id="audio-preview" aria-labelledby="audio-title" class="container" style="margin-top:2rem">
+            <h2 id="audio-title" class="section-title">Écouter un extrait</h2>
+            <div class="card audio-card">
+                <audio controls preload="none">
+                    <source src="image/Nouveau_projet.wav" type="audio/mpeg">
+                    Votre navigateur ne supporte pas la lecture audio.
+                </audio>
+                <p class="small">Voici le célèbre morceau de Jhon Pork intitulé "Ya Ya"</p>
+            </div>
+        </section>
+
+
+
+
+        <!-- PROGRAMME -->
+        <section id="program" class="container" aria-labelledby="programTitle">
+            <h2 id="programTitle" class="section-title">Programme & Horaires</h2>
+            <div class="card"
+                style="background:url('image/fond\ case\ 2.jpg') center/cover no-repeat; backdrop-filter:blur(3px);">
+                <table class="program-table" aria-describedby="programDesc">
+                    <thead>
+                        <tr>
+                            <th>Heure</th>
+                            <th>Scène</th>
+                            <th>Artiste</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>18:00</td>
+                            <td>Entrée / Warm-up</td>
+                            <td>Ouverture des portes</td>
+                        </tr>
+                        <tr>
+                            <td>19:00</td>
+                            <td>Scène principale</td>
+                            <td>Jhon Pork </td>
+                        </tr>
+                        <tr>
+                            <td>20:00</td>
+                            <td>Scène principale</td>
+                            <td>Jhon Pork x Marius </td>
+                        </tr>
+                        <tr>
+                            <td>21:30</td>
+                            <td>Scène principale</td>
+                            <td>Marius x jhon Pok x Kalimero(si present)</td>
+                        </tr>
+                        <tr>
+                            <td>23:30</td>
+                            <td>After</td>
+                            <td>Kalimero(si present) x Marius (DJ set)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p id="programDesc" class="small">Les horaires sont susceptibles de changer. Restez attentifs aux
+                    annonces officielles.</p>
+            </div>
+        </section>
+
+        <!-- INFOS PRATIQUES -->
+        <section id="info" class="container" aria-labelledby="infoTitle">
+            <h2 id="infoTitle" class="section-title">Infos pratiques</h2>
+            <div class="info-grid">
+                <div class="card">
+                    <h3 style="margin-top:0">Lieu</h3>
+                    <p><strong>Stade de vacqueyras</strong><br>Adresse : Rte de Vaison, 84190 Vacqueyras</p>
+                    <p class="small">Accès : transports en commun, vélo, aéroport, stationnement limité. Prévoir pièces
+                        pour
+                        vestiaire / consommation.</p>
+                </div>
+
+                <div class="card">
+
+                    <h4 style="margin-top:0">Plan / Emplacement</h4>
+
+                    <div
+                        style="background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:1rem;border-radius:8px;">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2834.193965545366!2d4.9821717765378!3d44.13770182026824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12ca3dbec5ddc1f7%3A0x6f0bd13e28d8a463!2sRte%20de%20Vaison%2C%2084190%20Vacqueyras!5e0!3m2!1sfr!2sfr!4v1731276970000!5m2!1sfr!2sfr"
+                            width="100%" height="250" style="border:0;border-radius:8px;" allowfullscreen=""
+                            loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+
+                        <p class="small">Adresse : Rte de Vaison, 84190 Vacqueyras</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq" class="container" aria-labelledby="faqTitle">
+            <h2 id="faqTitle" class="section-title">FAQ</h2>
+            <div class="card"
+                style="background:url('image/fond\ case\ 2.jpg') center/cover no-repeat; backdrop-filter:blur(3px);">
+                <div class="faq-item">
+                    <div class="faq-question" tabindex="0" role="button" aria-expanded="false">Puis-je entrer avec un
+                        sac ?</div>
+                    <div class="faq-answer">Les sacs seront contrôlés. Les contenants dangereux et les bouteilles en
+                        verre sont interdits.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" tabindex="0" role="button" aria-expanded="false">Y a-t-il une billetterie
+                        sur place ?</div>
+                    <div class="faq-answer">Oui, billetterie sur place selon disponibilité. Préférez l'achat en ligne
+                        pour garantir votre place.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" tabindex="0" role="button" aria-expanded="false">Accessibilité ?</div>
+                    <div class="faq-answer">Le site propose des accès PMR et des places réservées. Contactez-nous à
+                        l'aide de pigeon voyageur pour plus de détails.</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Billetterie (accessible) -->
+    <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true"
+        aria-labelledby="modalTitle">
+        <div class="modal card" role="document">
+            <h3 id="modalTitle">Billets pour le concert de Jhon Pork </h3>
+            <p class="small">Sélectionnez votre catégorie. Les prix affichés sont indicatifs.</p>
+            <div class="price-list">
+                <div class="row"><strong>Prévente :</strong> 25€</div>
+                <div class="row"><strong>Tarif normal :</strong> 35€</div>
+                <div class="row"><strong>VIP :</strong> 65€</div>
+            </div>
+            <p class="small">Achetez via le lien officiel :</p>
+            <p><a id="externalBuy" class="cta" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=2s" target="_blank"
+                    rel="noopener noreferrer">Aller à la billetterie</a></p>
+            <div style="display:flex;gap:.6rem;justify-content:flex-end;margin-top:.6rem">
+                <button class="btn-close" id="modalClose">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container row" style="justify-content:space-between;align-items:center">
+            <div>
+                <div style="font-weight:700">PSYCHIK</div>
+                <div class="small">© <span id="year"></span> Organisation • <a href="#"
+                        style="color:var(--muted)">Mentions légales</a></div>
+            </div>
+            <div class="socials">
+                <a href="#" aria-label="Facebook" title="Facebook">FB</a>
+                <a href="#" aria-label="Instagram" title="Instagram">IG</a>
+                <a href="#" aria-label="Twitter" title="Twitter">X</a>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        /* Petit script minimal pour menu mobile, modal accessible et FAQ.
+           - Ne pas externaliser si vous souhaitez portabilité.
+           - Modifiez les URLs et textes directement dans le HTML ci-dessus.
+        */
+
+        /* Utilities - focus trap (simple), show/hide functions */
+        (function () {
+            const menuToggle = document.getElementById('menuToggle');
+            const mobileNav = document.getElementById('mobileNav');
+            const buyBtns = [document.getElementById('buy-btn'), document.getElementById('buy-btn-mobile'), document.getElementById('heroBuy')].filter(Boolean);
+            const modalBackdrop = document.getElementById('modalBackdrop');
+            const modalClose = document.getElementById('modalClose');
+            const extBuy = document.getElementById('externalBuy');
+            const year = document.getElementById('year');
+
+            // Set current year
+            if (year) year.textContent = new Date().getFullYear();
+
+            // Mobile nav toggle
+            if (menuToggle) {
+                menuToggle.addEventListener('click', () => {
+                    const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
+                    menuToggle.setAttribute('aria-expanded', String(!expanded));
+                    if (expanded) {
+                        mobileNav.hidden = true; mobileNav.setAttribute('aria-hidden', 'true');
+                    } else {
+                        mobileNav.hidden = false; mobileNav.setAttribute('aria-hidden', 'false');
+                    }
+                });
+            }
+
+            // Modal open/close
+            function openModal() {
+                modalBackdrop.style.display = 'flex';
+                modalBackdrop.setAttribute('aria-hidden', 'false');
+                // focus management
+                lastFocused = document.activeElement;
+                modalClose.focus();
+                document.body.style.overflow = 'hidden';
+            }
+            function closeModal() {
+                modalBackdrop.style.display = 'none';
+                modalBackdrop.setAttribute('aria-hidden', 'true');
+                if (lastFocused) lastFocused.focus();
+                document.body.style.overflow = '';
+            }
+            let lastFocused = null;
+            buyBtns.forEach(b => {
+                b.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Optionally update external link href from data attribute
+                    // extBuy.href = 'https://votre-billetterie.example.com';
+                    openModal();
+                });
+            });
+            modalClose.addEventListener('click', closeModal);
+            modalBackdrop.addEventListener('click', (e) => {
+                if (e.target === modalBackdrop) closeModal();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modalBackdrop.style.display === 'flex') closeModal();
+                // Simple trap: keep Tab inside modal if open
+                if (modalBackdrop.style.display === 'flex' && e.key === 'Tab') {
+                    const focusable = modalBackdrop.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])');
+                    if (focusable.length === 0) { e.preventDefault(); return; }
+                    const first = focusable[0], last = focusable[focusable.length - 1];
+                    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+                    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+                }
+            });
+
+            // FAQ toggles (keyboard accessible)
+            document.querySelectorAll('.faq-question').forEach(q => {
+                q.addEventListener('click', toggleFAQ);
+                q.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleFAQ.call(q); } });
+                function toggleFAQ() {
+                    const expanded = this.getAttribute('aria-expanded') === 'true';
+                    this.setAttribute('aria-expanded', String(!expanded));
+                    const ans = this.nextElementSibling;
+                    if (ans) {
+                        ans.style.display = expanded ? 'none' : 'block';
+                    }
+                }
+            });
+
+            // Small: ensure externalBuy opens in new tab (already target="_blank") - could be updated dynamically
+            if (extBuy) {
+                extBuy.addEventListener('click', (e) => {
+                    // track event or verify url if needed
+                });
+            }
+
+            // Improve skip-to-content for keyboard users (optional - add link at top if desired)
+        })();
+    </script>
+
+    <!-- Quick instructions (basics) -->
+    <!--
+  INSTRUCTIONS RAPIDES :
+  - Remplacez les placeholders d'image (via.placeholder...) par vos images réelles.
+  - Modifiez le JSON-LD (script type application/ld+json) avant mise en production.
+  - Changez la palette et la typo en éditant :root en haut (variables CSS).
+  - Remplacez le href de #externalBuy par votre lien de billetterie réel.
+  - Vérifiez les contrastes avec un outil de tests WCAG après personnalisation.
+-->
+</body>
+
+</html>
