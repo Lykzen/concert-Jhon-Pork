@@ -1,17 +1,4 @@
 <!doctype html>
-<!--
-  index.html - Site événementiel pour un concert (HTML5 + CSS + minimal JS)
-
-  REMARQUES (changer ici) :
-  - Titre de l'événement / date / lieu / horaires / artistes : modifiez les constantes en début de <body> (data-* attributes) ou directement le contenu HTML.
-  - Lien billetterie : remplacez "#buy" par votre URL réelle et dans le modal l'attribut href.
-  - Images : remplacées par des placeholders https://via.placeholder.com/ . Cherchez les <img src="https://via.placeholder.com/..."> et changez les URLs.
-  - JSON-LD : modifiez les champs name, startDate, endDate, location, image, url, description, performer dans le <script type="application/ld+json"> situé plus bas.
-  - Couleurs / typographie : changez les variables CSS dans :root (--bg, --accent, --text, --muted, --font-family).
-  - Pour ajouter/retirer des artistes, modifiez la section <section id="lineup"> (chaque .artist-card).
-  - Accessibilité : éléments ARIA et focus visibles inclus. Vérifiez toujours avec un lecteur d'écran et un outil de contraste.
--->
-
 <html lang="fr">
 
 <head>
@@ -23,7 +10,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#0b0f12" />
-    <title>Concert - Jhon Pork 2k26</title>
+    <title>Concert - Jhon Pork 2k26S</title>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Google Font suggérée : Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -240,23 +227,36 @@
             }
         }
 
+        /* Cartes artistes centrées */
         .artist-card {
             display: flex;
             flex-direction: column;
-            gap: .6rem;
-            align-items: flex-start
+            align-items: center;
+            text-align: center;
+            gap: 0.6rem;
+            width: 100%;
+            /* chaque carte prend toute la largeur de sa colonne */
         }
 
+        /* Images prennent toute la largeur de la carte */
         .artist-card img {
             width: 100%;
-            height: 160px;
+            /* prend toute la largeur de la carte */
+            height: 220px;
+            /* hauteur fixe pour uniformité */
             object-fit: cover;
-            border-radius: 10px
+            /* remplit le cadre sans déformer l'image */
+            border-radius: 10px;
         }
 
-        .artist-name {
-            font-weight: 700
+
+
+        /* Nom et rôle centrés */
+        .artist-name,
+        .artist-role {
+            text-align: center;
         }
+
 
         .artist-role {
             color: var(--muted);
@@ -487,6 +487,33 @@
             text-align: center;
             color: var(--text);
         }
+
+        /* Grille lineup centrée horizontalement */
+        .lineup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            justify-content: center;
+            /* centre horizontalement les cartes */
+        }
+
+        /* Cartes artistes */
+        .artist-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* centre image et texte */
+            text-align: center;
+            gap: 0.6rem;
+        }
+
+        /* Images des artistes - taille uniforme */
+        .artist-card img {
+            width: 220px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
     </style>
 </head>
 
@@ -634,7 +661,7 @@
                         <tr>
                             <td>21:30</td>
                             <td>Scène principale</td>
-                            <td>Marius x jhon Pok x Kalimero(si present)</td>
+                            <td>Marius x jhon Pork x Kalimero(si present)</td>
                         </tr>
                         <tr>
                             <td>23:30</td>
@@ -850,5 +877,5 @@
 -->
 </body>
 
-
 </html>
+
